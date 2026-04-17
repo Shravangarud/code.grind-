@@ -1,21 +1,22 @@
 {
   "name": "codegrind",
   "version": "1.0.0",
-  "description": "",
+  "description": "TerminalSolve: High-Performance Technical Education Platform",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "seed": "node init_db.js",
     "dev": "node server.js",
+    "postinstall": "npm rebuild sqlite3 --build-from-source",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["coding", "education", "terminal", "solve"],
+  "author": "Shravan Garud",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "sqlite3": "^6.0.1"
+    "sqlite3": "5.1.7"
   }
 }
