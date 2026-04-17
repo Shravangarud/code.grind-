@@ -25,8 +25,39 @@ const db = new sqlite3.Database(dbPath, (err) => {
         console.error('Failed to connect to database:', err.message);
     } else {
         console.log('Connected to SQLite database.');
+        autoSeed(); // Run auto-seeding on boot
     }
 });
+
+// --- AUTO-SEEDING ENGINE (For Live Server) ---
+function autoSeed() {
+    const fs = require('fs');
+    const sqlFiles = [
+        path.join(__dirname, 'database', 'database.sql'),
+        path.join(__dirname, 'database', 'database_questions.sql'),
+        path.join(__dirname, 'database', 'jsdatabase.sql'),
+        path.join(__dirname, 'database', 'algo_ds_questions.sql'),
+        path.join(__dirname, 'database', 'language_questions.sql')
+    ];
+
+    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='problems'", (err, row) => {
+        if (!row) {
+            console.log('[AutoSeed] Database is fresh. Initializing schema and data...');
+            sqlFiles.forEach(file => {
+                if (fs.existsSync(file)) {
+                    console.log(`  > Importing: ${path.basename(file)}`);
+                    let content = fs.readFileSync(file, 'utf8')
+                        .replace(/SERIAL PRIMARY KEY/g, 'INTEGER PRIMARY KEY AUTOINCREMENT')
+                        .replace(/INSERT INTO/g, 'INSERT OR IGNORE INTO');
+                    
+                    db.exec(content, (err) => {
+                        if (err) console.error(`  [!] Error In ${path.basename(file)}:`, err.message);
+                    });
+                }
+            });
+        }
+    });
+}
 
 // API Routes
 
