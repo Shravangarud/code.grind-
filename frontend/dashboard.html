@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#690005",
+                        "on-primary-fixed-variant": "#005226",
+                        "primary": "#75ff9e",
+                        "on-surface": "#dfe2eb",
+                        "secondary-fixed-dim": "#c1c7d0",
+                        "primary-fixed": "#62ff96",
+                        "on-secondary": "#2b3138",
+                        "inverse-primary": "#006d35",
+                        "on-secondary-fixed": "#161c23",
+                        "surface-bright": "#353940",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-container": "#c0c9d4",
+                        "on-background": "#dfe2eb",
+                        "tertiary": "#dce5f0",
+                        "primary-fixed-dim": "#00e475",
+                        "background": "#10141a",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#dae3ee",
+                        "surface-tint": "#00e475",
+                        "surface-container-lowest": "#0a0e14",
+                        "surface-container": "#1c2026",
+                        "on-tertiary": "#29313a",
+                        "on-tertiary-fixed": "#141c24",
+                        "inverse-on-surface": "#2d3137",
+                        "on-secondary-container": "#b0b5be",
+                        "surface-container-low": "#181c22",
+                        "on-primary-fixed": "#00210b",
+                        "on-primary": "#003918",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#bec7d2",
+                        "surface": "#10141a",
+                        "primary-container": "#00e676",
+                        "surface-variant": "#31353c",
+                        "on-primary-container": "#00612e",
+                        "outline": "#859585",
+                        "secondary-container": "#41474f",
+                        "surface-container-highest": "#31353c",
+                        "secondary": "#c1c7d0",
+                        "on-surface-variant": "#bacbb9",
+                        "secondary-fixed": "#dde3ec",
+                        "on-tertiary-fixed-variant": "#3f4850",
+                        "on-secondary-fixed-variant": "#41474f",
+                        "inverse-surface": "#dfe2eb",
+                        "surface-container-high": "#262a31",
+                        "surface-dim": "#10141a",
+                        "outline-variant": "#3b4a3d",
+                        "on-tertiary-container": "#4c545d"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Space Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        body {
+            background-color: #0d1117;
+            color: #dfe2eb;
+        }
+    </style>
+</head>
+
+<body class="font-body selection:bg-primary/30 selection:text-primary">
+    <!-- TopNavBar -->
+    <header class="fixed top-0 w-full z-50 flex justify-between items-center h-16 px-6 bg-[#0d1117]">
+        <div class="flex items-center gap-8">
+            <span class="text-xl font-bold tracking-tighter text-[#00e676] font-headline">TerminalSolve</span>
+            <div
+                class="hidden md:flex items-center bg-surface-container-low px-4 py-1.5 rounded border border-transparent focus-within:border-primary-container/30 transition-all">
+                <span class="material-symbols-outlined text-tertiary text-sm mr-2">search</span>
+                <input class="bg-transparent border-none focus:ring-0 text-sm p-0 w-64 placeholder:text-tertiary/50"
+                    placeholder="Quick search..." type="text" />
+            </div>
+        </div>
+        <nav class="flex items-center gap-6">
+            <div class="flex gap-4">
+                <button
+                    class="material-symbols-outlined text-[#8b949e] hover:text-[#00e676] transition-colors cursor-pointer">notifications</button>
+                <button
+                    class="material-symbols-outlined text-[#8b949e] hover:text-[#00e676] transition-colors cursor-pointer">terminal</button>
+            </div>
+            <div class="h-6 w-[1px] bg-[#30363d]"></div>
+            <div class="flex items-center gap-3">
+                <button
+                    class="font-headline text-sm uppercase tracking-[0.1em] text-[#8b949e] hover:text-[#00e676] transition-all">Sign
+                    Out</button>
+                <div class="w-8 h-8 bg-surface-container-high rounded-full overflow-hidden cursor-pointer" onclick="window.location.href='profile.html'">
+                    <img alt="Developer Profile" class="w-full h-full object-cover"
+                        data-alt="close-up portrait of a developer with a neutral background, soft professional lighting, digital tech aesthetic"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxfx7UIySvE69BO7gL8s2yJppqCB-fXlp8su7SmA5uu76n4qL6tmfwBMckB29AkYCn7_ydrGj3e6qiQdUNE-qprvgx232lEKRPL9AOrzv7H65VmeOogl5ONOj9Vp5UywnPFewoJAs8BipTxiwkW6Q4wFdUyCLT1rCDPkrfUe4icPdjH4pNfmgUgXzmYTDxdG-25dEP25naC8-xOEGI2sxwcRqvXpkLDLNrITgcJJRrafGQvTz4NnBi67wMsTiForEzrAb6yArK_VVq" />
+                </div>
+            </div>
+        </nav>
+        <div class="absolute bottom-0 left-0 bg-[#30363d] h-[1px] w-full"></div>
+    </header>
+    <!-- SideNavBar -->
+    <aside class="fixed left-0 top-16 h-[calc(100vh-64px)] w-64 flex flex-col border-r border-[#30363d] bg-[#0d1117]">
+        <div class="p-6 border-b border-[#30363d]">
+            <div class="flex items-center gap-3 mb-4 cursor-pointer hover:opacity-80 transition-all" onclick="window.location.href='profile.html'">
+                <div class="w-10 h-10 bg-primary/10 flex items-center justify-center rounded">
+                    <span class="material-symbols-outlined text-primary">person</span>
+                </div>
+                <div>
+                    <p class="font-headline text-sm font-bold text-on-surface">Terminal_User</p>
+                    <p class="font-headline text-[10px] uppercase tracking-widest text-[#8b949e]">Rank: Senior Dev</p>
+                </div>
+            </div>
+            <button
+                class="w-full bg-primary-container text-on-primary-container font-headline text-xs font-bold py-2.5 rounded tracking-wide hover:shadow-[0_0_15px_rgba(0,230,118,0.2)] transition-all">
+                New Snippet
+            </button>
+        </div>
+        <nav class="flex-1 py-4">
+            <a class="flex items-center gap-3 px-6 py-4 text-[#00e676] border-r-2 border-[#00e676] bg-[#00e676]/5 font-headline text-sm uppercase tracking-[0.1em]"
+                href="#">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span>Dashboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-6 py-4 text-[#8b949e] hover:bg-[#30363d] hover:text-white transition-all font-headline text-sm uppercase tracking-[0.1em]"
+                href="problem.html">
+                <span class="material-symbols-outlined">code</span>
+                <span>Problems</span>
+            </a>
+            <a class="flex items-center gap-3 px-6 py-4 text-[#8b949e] hover:bg-[#30363d] hover:text-white transition-all font-headline text-sm uppercase tracking-[0.1em]"
+                href="leaderboard.html">
+                <span class="material-symbols-outlined">emoji_events</span>
+                <span>Leaderboard</span>
+            </a>
+            <a class="flex items-center gap-3 px-6 py-4 text-[#8b949e] hover:bg-[#30363d] hover:text-white transition-all font-headline text-sm uppercase tracking-[0.1em]"
+                href="#">
+                <span class="material-symbols-outlined">groups</span>
+                <span>Community</span>
+            </a>
+            <a class="flex items-center gap-3 px-6 py-4 text-[#8b949e] hover:bg-[#30363d] hover:text-white transition-all font-headline text-sm uppercase tracking-[0.1em]"
+                href="profile.html">
+                <span class="material-symbols-outlined">settings</span>
+                <span>Settings</span>
+            </a>
+        </nav>
+        <div class="p-6 bg-surface-container-low/50">
+            <div class="text-[10px] uppercase tracking-[0.2em] text-[#8b949e] mb-2">Weekly Goal</div>
+            <div class="h-1 bg-surface-container-highest rounded-full overflow-hidden">
+                <div class="h-full bg-primary w-0 shadow-[0_0_10px_rgba(0,230,118,0.5)]"></div>
+            </div>
+            <div class="mt-2 text-[11px] text-on-surface/70 font-headline">0 / 20 Problems</div>
+        </div>
+    </aside>
+    <!-- Main Content Area -->
+    <main class="ml-64 mt-16 p-8 min-h-screen">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <!-- Hero Section -->
+            <section class="relative p-10 bg-surface-container rounded-lg overflow-hidden border border-transparent">
+                <div class="absolute top-0 right-0 w-1/3 h-full opacity-10 pointer-events-none">
+                    <div
+                        class="h-full w-full bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-primary via-transparent to-transparent">
+                    </div>
+                </div>
+                <div class="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <h1 class="font-headline text-4xl font-bold tracking-tight mb-2 text-on-surface">Welcome back,
+                            Developer.</h1>
+                        <p class="text-tertiary mb-8 font-body max-w-md">Your compilation speed is up by 12% this week.
+                            You have 3 pending challenges from your mentors.</p>
+                        <div class="flex gap-4">
+                            <button
+                                class="px-6 py-3 bg-primary text-on-primary font-headline text-sm font-bold tracking-wide rounded shadow-[0_0_20px_0px_rgba(0,230,118,0.15)] hover:bg-primary/90 transition-all">Resume
+                                Session</button>
+                            <button
+                                class="px-6 py-3 bg-secondary-container text-on-surface font-headline text-sm font-bold tracking-wide rounded hover:bg-surface-container-highest transition-all">View
+                                Roadmap</button>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="p-4 bg-surface-container-high rounded border-l-4 border-primary">
+                            <p class="font-label text-[10px] text-tertiary tracking-widest mb-1 uppercase">Streak</p>
+                            <p class="font-headline text-2xl font-bold text-primary">0 Days</p>
+                        </div>
+                        <div class="p-4 bg-surface-container-high rounded border-l-4 border-on-secondary-container">
+                            <p class="font-label text-[10px] text-tertiary tracking-widest mb-1 uppercase">Rank</p>
+                            <p class="font-headline text-2xl font-bold text-on-surface">0</p>
+                        </div>
+                        <div class="p-4 bg-surface-container-high rounded border-l-4 border-tertiary">
+                            <p class="font-label text-[10px] text-tertiary tracking-widest mb-1 uppercase">Points</p>
+                            <p class="font-headline text-2xl font-bold text-on-surface">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Bento Grid Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Recommended Problems (Asymmetric Span) -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="flex justify-between items-end">
+                        <div>
+                            <h2 class="font-headline text-xl font-bold text-on-surface">Recommended Challenges</h2>
+                            <p class="text-xs text-tertiary uppercase tracking-widest font-label mt-1">Curated based on
+                                your stack</p>
+                        </div>
+                        <a class="text-primary text-xs font-headline uppercase tracking-widest hover:underline"
+                            href="#">Explore all</a>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div
+                            class="group p-6 bg-surface-container rounded hover:bg-surface-container-high transition-all cursor-pointer border-t border-transparent hover:border-primary/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="px-2 py-1 bg-on-primary-container/20 text-primary text-[10px] font-bold uppercase tracking-widest rounded">Medium</span>
+                                <span
+                                    class="material-symbols-outlined text-tertiary group-hover:text-primary transition-colors">terminal</span>
+                            </div>
+                            <h3 class="font-headline text-lg font-bold text-on-surface mb-2">Thread Pool Orchestration
+                            </h3>
+                            <p class="text-sm text-tertiary line-clamp-2 mb-4">Implement a dynamic thread pool manager
+                                that optimizes task allocation based on CPU latency.</p>
+                            <div
+                                class="flex items-center gap-4 text-[10px] text-tertiary font-label uppercase tracking-tighter">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">schedule</span> 45 min</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 250 XP</span>
+                            </div>
+                        </div>
+                        <div
+                            class="group p-6 bg-surface-container rounded hover:bg-surface-container-high transition-all cursor-pointer border-t border-transparent hover:border-primary/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="px-2 py-1 bg-error-container/20 text-error text-[10px] font-bold uppercase tracking-widest rounded">Hard</span>
+                                <span
+                                    class="material-symbols-outlined text-tertiary group-hover:text-primary transition-colors">database</span>
+                            </div>
+                            <h3 class="font-headline text-lg font-bold text-on-surface mb-2">LSM-Tree Indexing Engine
+                            </h3>
+                            <p class="text-sm text-tertiary line-clamp-2 mb-4">Build an efficient Log-Structured
+                                Merge-Tree for high-throughput write operations with Bloom filters.</p>
+                            <div
+                                class="flex items-center gap-4 text-[10px] text-tertiary font-label uppercase tracking-tighter">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">schedule</span> 90 min</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 600 XP</span>
+                            </div>
+                        </div>
+                        <div
+                            class="group p-6 bg-surface-container rounded hover:bg-surface-container-high transition-all cursor-pointer border-t border-transparent hover:border-primary/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="px-2 py-1 bg-on-secondary-container/20 text-on-secondary-container text-[10px] font-bold uppercase tracking-widest rounded">Easy</span>
+                                <span
+                                    class="material-symbols-outlined text-tertiary group-hover:text-primary transition-colors">cloud</span>
+                            </div>
+                            <h3 class="font-headline text-lg font-bold text-on-surface mb-2">Microservice Health-Check
+                            </h3>
+                            <p class="text-sm text-tertiary line-clamp-2 mb-4">Design a robust health aggregation
+                                service for a distributed cluster with circuit breakers.</p>
+                            <div
+                                class="flex items-center gap-4 text-[10px] text-tertiary font-label uppercase tracking-tighter">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">schedule</span> 15 min</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 100 XP</span>
+                            </div>
+                        </div>
+                        <div
+                            class="group p-6 bg-surface-container rounded hover:bg-surface-container-high transition-all cursor-pointer border-t border-transparent hover:border-primary/20">
+                            <div class="flex justify-between items-start mb-4">
+                                <span
+                                    class="px-2 py-1 bg-on-primary-container/20 text-primary text-[10px] font-bold uppercase tracking-widest rounded">Medium</span>
+                                <span
+                                    class="material-symbols-outlined text-tertiary group-hover:text-primary transition-colors">security</span>
+                            </div>
+                            <h3 class="font-headline text-lg font-bold text-on-surface mb-2">OAuth2 PKCE Implementation
+                            </h3>
+                            <p class="text-sm text-tertiary line-clamp-2 mb-4">Secure a public client using the Proof
+                                Key for Code Exchange flow without client secrets.</p>
+                            <div
+                                class="flex items-center gap-4 text-[10px] text-tertiary font-label uppercase tracking-tighter">
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">schedule</span> 35 min</span>
+                                <span class="flex items-center gap-1"><span
+                                        class="material-symbols-outlined text-sm">payments</span> 300 XP</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Recent Activity & Stats (Side Column) -->
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="font-headline text-xl font-bold text-on-surface">Statistics</h2>
+                        <p class="text-xs text-tertiary uppercase tracking-widest font-label mt-1">Live metrics</p>
+                    </div>
+                    <div class="bg-surface-container p-6 rounded-lg space-y-6">
+                        <!-- Simplified Visual Chart Area -->
+                        <div class="space-y-4">
+                            <div
+                                class="flex items-center justify-between text-xs font-label text-tertiary uppercase tracking-widest">
+                                <span>Solved by difficulty</span>
+                                <span class="text-primary">0% Complete</span>
+                            </div>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-[10px] text-tertiary mb-1">
+                                        <span>Easy</span>
+                                        <span>0/150</span>
+                                    </div>
+                                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-secondary w-[0%]"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[10px] text-tertiary mb-1">
+                                        <span>Medium</span>
+                                        <span>0/120</span>
+                                    </div>
+                                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-primary w-[0%] shadow-[0_0_8px_rgba(0,230,118,0.3)]">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-[10px] text-tertiary mb-1">
+                                        <span>Hard</span>
+                                        <span>0/45</span>
+                                    </div>
+                                    <div class="h-1.5 bg-surface-container-highest rounded-full overflow-hidden">
+                                        <div class="h-full bg-error w-[0%]"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-6 border-t border-[#30363d] space-y-4">
+                            <h3 class="font-headline text-xs font-bold uppercase tracking-widest text-on-surface">Recent
+                                Activity</h3>
+                            <div class="space-y-4">
+                                <div class="flex gap-4">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+                                    <div>
+                                        <p class="text-sm font-medium text-on-surface leading-tight">Solved "Matrix
+                                            Rotation"</p>
+                                        <p class="text-[10px] text-tertiary mt-0.5">2 hours ago • +45 XP</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-tertiary mt-1.5"></div>
+                                    <div>
+                                        <p class="text-sm font-medium text-on-surface leading-tight">Started "Blockchain
+                                            Consensus"</p>
+                                        <p class="text-[10px] text-tertiary mt-0.5">5 hours ago • Contests</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <div class="w-1.5 h-1.5 rounded-full bg-primary mt-1.5"></div>
+                                    <div>
+                                        <p class="text-sm font-medium text-on-surface leading-tight">Achieved "Bug
+                                            Hunter" Badge</p>
+                                        <p class="text-[10px] text-tertiary mt-0.5">Yesterday • Milestone</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <button
+                                class="w-full py-2 bg-surface-container-low border border-[#30363d] text-[#8b949e] font-headline text-[10px] uppercase tracking-widest hover:bg-surface-container-high hover:text-on-surface transition-all">
+                                View Full History
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Promo/Action Card -->
+                    <div
+                        class="relative bg-gradient-to-br from-primary-container/20 to-surface-container p-6 rounded-lg overflow-hidden border border-primary/10">
+                        <div class="relative z-10">
+                            <h4 class="font-headline text-lg font-bold text-on-surface mb-1">Global Contest #42</h4>
+                            <p class="text-xs text-tertiary mb-4">Starting in 04:12:45. Top 10 users get exclusive beta
+                                access.</p>
+                            <button
+                                class="w-full bg-primary text-on-primary font-headline text-xs font-bold py-2 rounded">Register
+                                Now</button>
+                        </div>
+                        <span
+                            class="material-symbols-outlined absolute -bottom-4 -right-4 text-7xl opacity-5 text-primary rotate-12">emoji_events</span>
+                    </div>
+                </div>
+            </div>
+            <!-- Team Collaboration / Community Section -->
+            <section class="space-y-6">
+                <div>
+                    <h2 class="font-headline text-xl font-bold text-on-surface">Community Discussions</h2>
+                    <p class="text-xs text-tertiary uppercase tracking-widest font-label mt-1">Trending topics in your
+                        circles</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-surface-container p-5 rounded border-l-2 border-primary/30 flex gap-4 items-start">
+                        <img alt="User" class="w-8 h-8 rounded-full"
+                            data-alt="Avatar of a male developer, clean line art style, tech profile photo"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKEr5WdfCjliDh8niCxFyPmcyqyiypWPQS5BKV8juZmEgfv_M2IBdoRqU_MCXLT_S761cGEpTIn_epg054d2JSLMpiDqVYoL7UNTWzGVodnfujQXMtWYbqOT-2Od5MDg3BcxQ2hI04RDABavGAuhurikZgUy0UMxQZpc1mixn3t7-PGLy2hr8okqwLFuQoZJh81_c97h9YzVKb74M1ZOXxKw_A4DqKvg0rDINjBVZbmg66bS7LwDKp98TtQ8ROp6TZ9LMSNwDnAJzl" />
+                        <div>
+                            <p class="text-xs font-bold text-on-surface font-headline mb-1">Rust ownership in kernels?
+                            </p>
+                            <p class="text-[10px] text-tertiary mb-3">12 replies • 4 min ago</p>
+                            <div class="flex gap-2">
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">RUST</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">SYSTEMS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container p-5 rounded border-l-2 border-primary/30 flex gap-4 items-start">
+                        <img alt="User" class="w-8 h-8 rounded-full"
+                            data-alt="Avatar of a female developer, modern minimalist illustration, dark background"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJq8cV1YtBiYnwzS4zATXgvTQRWb6lk64JRgT7WPiebcZijtkLQKY3tePR6bLJnSVontbYpFw5BIspHkHO5dPpbaQD0qQRLCvRDZGtYYmB5ja4lQZEPaQt5exHYVy9NfwJjMDDmC0PSaDK9KyYh6ISod4RBRVoBtja_zTNouc6g-4Immx_7dJ5-5FQYtmJCv7akSMuHuz0xS2Wo2dka_FXBNgh8WK1rhqFyP-50_eMBt-joadodlz1nMyjsRdofpDlUxsluzCe6Co2" />
+                        <div>
+                            <p class="text-xs font-bold text-on-surface font-headline mb-1">Why I swapped React for HTMX
+                            </p>
+                            <p class="text-[10px] text-tertiary mb-3">45 replies • 1 hour ago</p>
+                            <div class="flex gap-2">
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">FRONTEND</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">HOT</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container p-5 rounded border-l-2 border-primary/30 flex gap-4 items-start">
+                        <img alt="User" class="w-8 h-8 rounded-full"
+                            data-alt="Stylized avatar of a tech professional, vibrant neon accents, professional look"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrSO0H8vTgfA-1lbsd6QLcqFXwjeWXOktMEdUc5HZNeeKBqSAYgUmDyS2-EM4Bl7yTQXwNmiUy1O9PI6XE5zZkO0yZ8AnKT01-u8zW33n0jbfm15gYOWJKvyuGuPl2k85ESGn8uJHo84LDE_MQ41CfXlYsBSB0chqsFBaVRYNhhA0WHF6-zDNgjbeHMAYcW2xYspntHMU6WDufzdppPdhgTkjOzt-fqnYsmUJ_D9lThCHGhTAjxmJu9DGA4oiEQ8jcEQK2vMdfmNsq" />
+                        <div>
+                            <p class="text-xs font-bold text-on-surface font-headline mb-1">Postgres indexing best
+                                practices</p>
+                            <p class="text-[10px] text-tertiary mb-3">8 replies • 2 hours ago</p>
+                            <div class="flex gap-2">
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">DATABASE</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-surface-container-high rounded text-[8px] font-label text-tertiary border border-[#30363d]">SQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- Contextual FAB (Dashboard relevant) -->
+    <button
+        class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded shadow-xl flex items-center justify-center hover:scale-105 transition-transform z-50">
+        <span class="material-symbols-outlined">add</span>
+    </button>
+    <script src="dashboard.js"></script>
+</body>
+
+</html>

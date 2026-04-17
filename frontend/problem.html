@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerminalSolve — Problems</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d1117;
+            --bg2: #161b22;
+            --bg3: #21262d;
+            --border: #30363d;
+            --green: #00e676;
+            --green2: #00c853;
+            --text: #e6edf3;
+            --muted: #8b949e;
+            --amber: #ffa040;
+            --blue: #58a6ff;
+            --red: #f85149;
+            --purple: #c084fc;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* NAV */
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            height: 56px;
+            background: #0a0d13;
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .logo span {
+            color: var(--muted);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 4px;
+        }
+
+        .nav-links a {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all .15s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: var(--bg3);
+        }
+
+        .nav-links a.active {
+            color: var(--green);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0d1117;
+            font-family: 'JetBrains Mono', monospace;
+            cursor: pointer;
+        }
+
+        /* LAYOUT */
+        .layout {
+            display: flex;
+            height: calc(100vh - 56px);
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            background: #0a0d13;
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 16px 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-label {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #484f58;
+            letter-spacing: 1.5px;
+            padding: 0 16px;
+            margin-bottom: 8px;
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 16px;
+            cursor: pointer;
+            transition: all .1s;
+            font-size: 13px;
+            color: var(--muted);
+            border-left: 2px solid transparent;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg2);
+            color: var(--text);
+        }
+
+        .sidebar-item.active {
+            background: rgba(0, 230, 118, .08);
+            color: var(--green);
+            border-left-color: var(--green);
+        }
+
+        .sidebar-item .cnt {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg3);
+            padding: 2px 7px;
+            border-radius: 10px;
+        }
+
+        .sidebar-item.active .cnt {
+            background: rgba(0, 230, 118, .2);
+            color: var(--green);
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        /* TOOLBAR */
+        .toolbar {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .search-wrap {
+            flex: 1;
+            max-width: 340px;
+            position: relative;
+        }
+
+        .search-wrap svg {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--muted);
+        }
+
+        .search {
+            width: 100%;
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 7px 12px 7px 32px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .search:focus {
+            border-color: var(--green);
+        }
+
+        .search::placeholder {
+            color: var(--muted);
+        }
+
+        .filter-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .filt {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all .15s;
+        }
+
+        .filt:hover,
+        .filt.on {
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(0, 230, 118, .07);
+        }
+
+        .filt.med.on {
+            border-color: var(--amber);
+            color: var(--amber);
+            background: rgba(255, 160, 64, .07);
+        }
+
+        .filt.hard.on {
+            border-color: var(--red);
+            color: var(--red);
+            background: rgba(248, 81, 73, .07);
+        }
+
+        .total {
+            margin-left: auto;
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--muted);
+        }
+
+        /* TABLE HEADER */
+        .tbl-head {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 80px 90px 90px;
+            padding: 8px 20px;
+            border-bottom: 1px solid var(--border);
+            background: #080b10;
+        }
+
+        .tbl-head span {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: #484f58;
+            letter-spacing: .8px;
+        }
+
+        /* PROBLEM ROW */
+        .prow {
+            border-bottom: 1px solid #0f1318;
+            cursor: pointer;
+        }
+
+        .prow-main {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 80px 90px 90px;
+            align-items: center;
+            padding: 11px 20px;
+            transition: background .1s;
+            gap: 6px;
+        }
+
+        .prow-main:hover {
+            background: var(--bg2);
+        }
+
+        .prow.open .prow-main {
+            background: var(--bg2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pnum {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .ptitle {
+            font-size: 13px;
+            color: #c9d1d9;
+            font-family: 'JetBrains Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ptitle:hover {
+            color: var(--green);
+        }
+
+        .prow.open .ptitle {
+            color: var(--green);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            white-space: nowrap;
+        }
+
+        .easy {
+            background: rgba(0, 200, 83, .12);
+            color: #00c853;
+        }
+
+        .med {
+            background: rgba(255, 160, 64, .12);
+            color: #ffa040;
+        }
+
+        .hard {
+            background: rgba(248, 81, 73, .12);
+            color: #f85149;
+        }
+
+        .acc {
+            font-size: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--muted);
+        }
+
+        .cat-badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(88, 166, 255, .1);
+            color: var(--blue);
+            white-space: nowrap;
+        }
+
+        .cat-badge.db {
+            background: rgba(192, 132, 252, .1);
+            color: var(--purple);
+        }
+
+        .cat-badge.js {
+            background: rgba(255, 160, 64, .1);
+            color: var(--amber);
+        }
+
+        .done-icon {
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .done-icon.yes {
+            color: var(--green);
+        }
+
+        .done-icon.no {
+            color: var(--bg3);
+        }
+
+        .chevron {
+            display: inline-block;
+            transition: transform .2s;
+            margin-left: 6px;
+            font-size: 10px;
+            color: var(--muted);
+        }
+
+        .prow.open .chevron {
+            transform: rotate(90deg);
+            color: var(--green);
+        }
+
+        /* EXPANDED PANEL */
+        .prow-detail {
+            display: none;
+            padding: 20px 24px 24px;
+            background: #0e1319;
+            border-top: 1px solid #1a2030;
+        }
+
+        .prow.open .prow-detail {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .detail-section h4 {
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--green);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .detail-section h4 .ico {
+            font-size: 14px;
+        }
+
+        .desc-text {
+            font-size: 13px;
+            color: #8b949e;
+            line-height: 1.7;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .tip {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .tip-num {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(0, 230, 118, .12);
+            border: 1px solid rgba(0, 230, 118, .3);
+            color: var(--green);
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tip-text {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tip-text b {
+            color: #c9d1d9;
+        }
+
+        .approach {
+            margin-top: 14px;
+            padding: 12px;
+            background: rgba(0, 230, 118, .04);
+            border: 1px solid rgba(0, 230, 118, .15);
+            border-radius: 8px;
+        }
+
+        .approach-label {
+            font-size: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--green);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .approach-text {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.6;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .complexity {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .cx {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .cx.time {
+            background: rgba(88, 166, 255, .1);
+            color: var(--blue);
+        }
+
+        .cx.space {
+            background: rgba(192, 132, 252, .1);
+            color: var(--purple);
+        }
+
+        .solve-btn {
+            margin-top: 16px;
+            background: var(--green);
+            color: #0d1117;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all .15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .solve-btn:hover {
+            background: var(--green2);
+            transform: translateY(-1px);
+        }
+
+        /* EMPTY */
+        .empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--muted);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+        }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        @media(max-width:768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .prow-main {
+                grid-template-columns: 40px 1fr 80px 70px;
+            }
+
+            .tbl-head {
+                grid-template-columns: 40px 1fr 80px 70px;
+            }
+
+            .tbl-head span:nth-child(5),
+            .tbl-head span:nth-child(6),
+            .prow-main>*:nth-child(5),
+            .prow-main>*:nth-child(6) {
+                display: none;
+            }
+
+            .prow.open .prow-detail {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="nav">
+        <div class="logo">TerminalSolve<span>()</span></div>
+        <div class="nav-links">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="problem.html">Problems</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="profile.html">Profile</a>
+        </div>
+        <div class="nav-right">
+            <div class="avatar" onclick="window.location.href='profile.html'" style="cursor:pointer">S</div>
+        </div>
+    </nav>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-label">CATEGORY</div>
+                <div class="sidebar-item active" data-cat="All" onclick="setCat(this)">
+                    <span>All Problems</span><span class="cnt" id="cnt-all">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="Algorithms" onclick="setCat(this)">
+                    <span>Algorithms</span><span class="cnt" id="cnt-algo">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="Database" onclick="setCat(this)">
+                    <span>Database / SQL</span><span class="cnt" id="cnt-db">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="JavaScript" onclick="setCat(this)">
+                    <span>JavaScript</span><span class="cnt" id="cnt-js">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="Python" onclick="setCat(this)">
+                    <span>Python</span><span class="cnt" id="cnt-p">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="Java" onclick="setCat(this)">
+                    <span>Java</span><span class="cnt" id="cnt-j">0</span>
+                </div>
+                <div class="sidebar-item" data-cat="C++" onclick="setCat(this)">
+                    <span>C++</span><span class="cnt" id="cnt-c">0</span>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">DIFFICULTY</div>
+                <div class="sidebar-item" data-diff="Easy" onclick="setDiff(this)">
+                    <span style="color:#00c853">Easy</span><span class="cnt" id="cnt-easy">0</span>
+                </div>
+                <div class="sidebar-item" data-diff="Medium" onclick="setDiff(this)">
+                    <span style="color:#ffa040">Medium</span><span class="cnt" id="cnt-med">0</span>
+                </div>
+                <div class="sidebar-item" data-diff="Hard" onclick="setDiff(this)">
+                    <span style="color:#f85149">Hard</span><span class="cnt" id="cnt-hard">0</span>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">TOPICS</div>
+                <div class="sidebar-item" data-tag="Array" onclick="setTag(this)"><span>Array</span></div>
+                <div class="sidebar-item" data-tag="Dynamic Programming" onclick="setTag(this)"><span>Dynamic
+                        Programming</span></div>
+                <div class="sidebar-item" data-tag="Tree" onclick="setTag(this)"><span>Trees & Graphs</span></div>
+                <div class="sidebar-item" data-tag="Window Function" onclick="setTag(this)"><span>Window Function</span>
+                </div>
+                <div class="sidebar-item" data-tag="Closures" onclick="setTag(this)"><span>Closures</span></div>
+                <div class="sidebar-item" data-tag="Promises and Time" onclick="setTag(this)"><span>Promises &
+                        Async</span></div>
+            </div>
+        </aside>
+
+        <div class="main">
+            <div class="toolbar">
+                <div class="search-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8" />
+                        <path d="m21 21-4.35-4.35" />
+                    </svg>
+                    <input class="search" id="searchInput" placeholder="Search problems..." oninput="applyFilters()">
+                </div>
+                <div class="filter-btns">
+                    <button class="filt on" data-d="All" onclick="setDiffBtn(this)">All</button>
+                    <button class="filt" data-d="Easy" onclick="setDiffBtn(this)">Easy</button>
+                    <button class="filt med" data-d="Medium" onclick="setDiffBtn(this)">Medium</button>
+                    <button class="filt hard" data-d="Hard" onclick="setDiffBtn(this)">Hard</button>
+                </div>
+                <div class="total" id="totalCount"></div>
+            </div>
+            <div class="tbl-head">
+                <span>#</span><span>TITLE</span><span>DIFFICULTY</span><span>ACCEPT.</span><span>CATEGORY</span><span>STATUS</span>
+            </div>
+            <div id="problemList"></div>
+            <div class="empty" id="emptyMsg" style="display:none">No problems found matching your search.</div>
+        </div>
+    </div>
+
+    <script>
+        const TIPS = {
+            // ── ALGORITHMS ──────────────────────────────────────────────
+            '001': { approach: 'Hash Map', time: 'O(n)', space: 'O(n)', tips: ['Store each number in a hash map as you iterate.', 'For each element, check if <b>target - current</b> exists in the map.', 'Return indices immediately when found — no need to complete iteration.', 'Edge: make sure you don\'t use the same index twice.'] },
+            '003': { approach: 'Sliding Window', time: 'O(n)', space: 'O(min(m,n))', tips: ['Use two pointers (left, right) to maintain a window.', 'Expand right pointer; if char seen, shrink left past duplicate.', 'Use a Set or Map to track characters in current window.', 'Track <b>max window size</b> at each step.'] },
+            '004': { approach: 'Binary Search', time: 'O(log(m+n))', space: 'O(1)', tips: ['Binary search on the smaller array for the correct partition.', 'Ensure left half has (m+n)/2 elements total.', 'Check boundary conditions: <b>maxLeft <= minRight</b>.', 'Handle odd total length separately for median.'] },
+            '011': { approach: 'Two Pointers', time: 'O(n)', space: 'O(1)', tips: ['Start with left=0, right=end. Calculate area = min(h[l],h[r]) * (r-l).', 'Move the pointer with the <b>shorter height</b> inward.', 'Greedy: moving the taller side can never improve result.', 'Track max area at every step.'] },
+            '015': { approach: 'Sort + Two Pointers', time: 'O(n²)', space: 'O(1)', tips: ['Sort the array first to enable two-pointer approach.', 'Fix one element i, then run two pointers on the rest.', 'Skip duplicate values of i, left, and right to avoid duplicates.', 'Check: <b>nums[i] + nums[l] + nums[r] == 0</b>.'] },
+            '020': { approach: 'Stack', time: 'O(n)', space: 'O(n)', tips: ['Push opening brackets onto the stack.', 'For closing bracket, check if top of stack matches.', 'Stack must be empty at the end for valid string.', 'Use a map: ) → (, ] → [, } → {.'] },
+            '042': { approach: 'Two Pointers', time: 'O(n)', space: 'O(1)', tips: ['Track leftMax and rightMax as you move pointers inward.', 'Water at each bar = min(leftMax, rightMax) - height[i].', 'Move the pointer with the smaller max boundary.', 'Alternatively, use prefix max arrays (simpler but O(n) space).'] },
+            '076': { approach: 'Sliding Window', time: 'O(m+n)', space: 'O(n)', tips: ['Use a frequency map for chars in t.', 'Expand right until window is valid (contains all of t).', 'Shrink left to minimise window while still valid.', 'Track <b>have</b> vs <b>need</b> counters to check validity in O(1).'] },
+            '002': { approach: 'Linked List', time: 'O(max(m,n))', space: 'O(max(m,n))', tips: ['Traverse both lists simultaneously, adding digits + carry.', 'carry = sum / 10, digit = sum % 10.', 'Continue while either list has nodes or carry > 0.', 'Create a dummy head node to simplify edge cases.'] },
+            '019': { approach: 'Two Pointers', time: 'O(n)', space: 'O(1)', tips: ['Move fast pointer n steps ahead.', 'Then move both slow and fast until fast reaches end.', 'slow.next is the node to delete.', 'Use a dummy head to handle deleting the first node.'] },
+            '021': { approach: 'Merge', time: 'O(m+n)', space: 'O(1)', tips: ['Compare heads of both lists; attach smaller one.', 'Use a dummy node to simplify head management.', 'Append remaining nodes of non-empty list at end.', 'Can also be solved recursively in one elegant line.'] },
+            '141': { approach: "Floyd's Cycle Detection", time: 'O(n)', space: 'O(1)', tips: ['Use slow (1 step) and fast (2 steps) pointers.', 'If they meet → cycle exists.', 'If fast reaches null → no cycle.', 'Alternative: use a Set to store visited nodes O(n) space.'] },
+            '146': { approach: 'HashMap + Doubly Linked List', time: 'O(1)', space: 'O(n)', tips: ['HashMap for O(1) key lookup; DLL for O(1) insertion/deletion.', 'Most Recently Used at head, Least at tail.', 'On get: move node to head. On put: add to head, evict tail if over capacity.', 'Use dummy head and tail nodes to avoid null checks.'] },
+            '206': { approach: 'Iterative', time: 'O(n)', space: 'O(1)', tips: ['Track prev=null, curr=head.', 'In each step: store next, set curr.next=prev, advance prev and curr.', 'After loop, prev is the new head.', 'Can also solve recursively but iterative uses O(1) space.'] },
+            '005': { approach: 'Expand Around Center', time: 'O(n²)', space: 'O(1)', tips: ['For each character, try expanding around it (odd) and between chars (even).', 'Track the longest expansion found.', 'Check both left-- and right++ while chars match.', 'Alternatively use Manacher\'s algorithm for O(n).'] },
+            '010': { approach: 'Dynamic Programming', time: 'O(m·n)', space: 'O(m·n)', tips: ['dp[i][j] = does s[0..i-1] match p[0..j-1]?', 'Handle base cases: empty pattern matches empty string.', 'For \"*\": dp[i][j] = dp[i][j-2] (zero use) OR dp[i-1][j] (one or more).', 'For \".\": treat it as any character match.'] },
+            '053': { approach: "Kadane's Algorithm", time: 'O(n)', space: 'O(1)', tips: ['At each index: maxEndingHere = max(num, maxEndingHere + num).', 'Track global max across all positions.', 'Reset to current element when previous subarray sum is negative.', 'Works in a single pass — classic greedy DP.'] },
+            '070': { approach: 'Dynamic Programming', time: 'O(n)', space: 'O(1)', tips: ['dp[i] = number of ways to reach step i.', 'dp[i] = dp[i-1] + dp[i-2] — classic Fibonacci pattern.', 'Base cases: dp[1]=1, dp[2]=2.', 'Space-optimise by using just two variables instead of an array.'] },
+            '322': { approach: 'Bottom-Up DP', time: 'O(amount·n)', space: 'O(amount)', tips: ['dp[i] = fewest coins needed to make amount i.', 'For each amount, try every coin: dp[i] = min(dp[i], dp[i-coin]+1).', 'Initialise dp[0]=0, all others = Infinity.', 'Return -1 if dp[amount] is still Infinity.'] },
+            '300': { approach: 'DP + Binary Search', time: 'O(n log n)', space: 'O(n)', tips: ['Simple O(n²) DP: dp[i] = max LIS ending at index i.', 'For O(n log n): maintain a patience-sort tails array.', 'Binary search for position to replace in tails for each element.', 'Length of tails array is the answer.'] },
+            '094': { approach: 'Iterative Stack', time: 'O(n)', space: 'O(n)', tips: ['Push left children until null, then process node, then go right.', 'Alternatively use Morris traversal for O(1) space.', 'Recursive version is trivial: left → root → right.', 'Result should be sorted for a valid BST.'] },
+            '098': { approach: 'DFS with Range', time: 'O(n)', space: 'O(h)', tips: ['Pass min and max bounds down the recursion.', 'Left subtree: max becomes node.val.', 'Right subtree: min becomes node.val.', 'Be careful with Integer.MIN/MAX boundary edge cases.'] },
+            '102': { approach: 'BFS', time: 'O(n)', space: 'O(n)', tips: ['Use a queue; process all nodes at current level together.', 'Track queue size at start of each level — that\'s how many to dequeue.', 'Collect values per level into a sub-array.', 'Result is list of lists.'] },
+            '104': { approach: 'DFS/BFS', time: 'O(n)', space: 'O(h)', tips: ['Recursive: return 1 + max(depth(left), depth(right)).', 'Base case: null node returns 0.', 'Iterative BFS: count levels in queue.', 'Simple one-liner with recursion.'] },
+            '200': { approach: 'DFS/BFS', time: 'O(m·n)', space: 'O(m·n)', tips: ['Iterate grid; when you hit \'1\', do DFS/BFS marking all connected \'1\'s as visited.', 'Each DFS call = one island discovered. Count calls.', 'Mark cells as \'0\' (or \'visited\') during traversal.', 'Use BFS with a queue for iterative version.'] },
+            '207': { approach: 'Topological Sort (DFS)', time: 'O(V+E)', space: 'O(V+E)', tips: ['Build adjacency list from prerequisites.', 'DFS: if visiting a node currently in path → cycle detected.', 'Use 3 states: unvisited, visiting, visited.', 'If no cycle exists → can finish all courses.'] },
+            '236': { approach: 'DFS', time: 'O(n)', space: 'O(h)', tips: ['If root is null or equals p or q → return root.', 'Recurse left and right subtrees.', 'If both sides return non-null → current node is LCA.', 'If only one side non-null → that subtree contains both nodes.'] },
+            '017': { approach: 'Backtracking', time: 'O(4^n)', space: 'O(n)', tips: ['Map each digit to its letters (like a phone keypad).', 'At each step, try every letter for current digit and recurse.', 'Backtrack by removing the last added character.', 'Base case: current combination length equals input length.'] },
+            '022': { approach: 'Backtracking', time: 'O(4^n / √n)', space: 'O(n)', tips: ['Track open and close counts.', 'Add \'(\' if open < n; add \')\' if close < open.', 'Base case: length == 2*n → add to result.', 'No explicit backtrack needed with string concatenation.'] },
+            '039': { approach: 'Backtracking', time: 'O(2^n)', space: 'O(n)', tips: ['Sort candidates to enable early termination.', 'At each step, pick current element (can reuse) or skip to next.', 'Subtract from target; if 0 → add to result.', 'If target < 0 → prune branch.'] },
+            '046': { approach: 'Backtracking', time: 'O(n!)', space: 'O(n)', tips: ['Use a boolean used[] array to track chosen elements.', 'At each recursion level, try all unused elements.', 'Backtrack by marking element unused after recursion.', 'Base case: current permutation length equals nums length.'] },
+            '051': { approach: 'Backtracking', time: 'O(n!)', space: 'O(n²)', tips: ['Place queen row by row; for each row try each column.', 'Validate: no same column, no same diagonal (|row1-row2| == |col1-col2|).', 'Use sets for cols, diagonals (/), anti-diagonals (\\).', 'Backtrack by removing queen and trying next column.'] },
+            '055': { approach: 'Greedy', time: 'O(n)', space: 'O(1)', tips: ['Track maxReach = 0 as you scan left to right.', 'At each index i: if i > maxReach → return false.', 'Update maxReach = max(maxReach, i + nums[i]).', 'If you reach or pass last index → return true.'] },
+            '056': { approach: 'Sort + Merge', time: 'O(n log n)', space: 'O(n)', tips: ['Sort intervals by start time.', 'Compare current interval\'s end with next interval\'s start.', 'If overlapping (end >= next start): merge by extending end.', 'Otherwise: push current to result, move to next.'] },
+            '121': { approach: 'Greedy', time: 'O(n)', space: 'O(1)', tips: ['Track minimum price seen so far as you iterate.', 'At each day: profit = price - minSoFar.', 'Update maxProfit if current profit is higher.', 'Single pass — classic greedy problem.'] },
+            '347': { approach: 'Bucket Sort', time: 'O(n)', space: 'O(n)', tips: ['Count frequency of each element with a HashMap.', 'Create buckets[i] = list of elements with frequency i.', 'Iterate buckets from high to low; collect k elements.', 'Alternative: use a min-heap of size k — O(n log k).'] },
+            '007': { approach: 'Math', time: 'O(log n)', space: 'O(1)', tips: ['Extract digits using % 10, build reversed number.', 'Check 32-bit overflow: if reversed > Integer.MAX_VALUE → return 0.', 'Handle negative: reverse absolute value then negate.', 'Watch out for trailing zeros in original (leading zeros in reversed).'] },
+            '009': { approach: 'Math', time: 'O(log n)', space: 'O(1)', tips: ['Negative numbers are never palindromes.', 'Numbers ending in 0 (except 0 itself) are not palindromes.', 'Reverse only the second half of digits.', 'Compare first half with reversed second half.'] },
+            '136': { approach: 'Bit Manipulation (XOR)', time: 'O(n)', space: 'O(1)', tips: ['XOR of a number with itself = 0.', 'XOR of a number with 0 = itself.', 'XOR all elements together — duplicates cancel out.', 'Result is the single element. Elegant one-liner.'] },
+            '191': { approach: 'Bit Manipulation', time: 'O(1)', space: 'O(1)', tips: ['Use n & (n-1) to remove the lowest set bit; count iterations until n=0.', 'Or use n & 1 to check last bit, shift right 32 times.', 'Brian Kernighan\'s algorithm: loop while n != 0, do n = n & (n-1).', 'Many languages have a built-in popcount function.'] },
+            '1143': { approach: '2D DP', time: 'O(m·n)', space: 'O(m·n)', tips: ['dp[i][j] = LCS of text1[0..i-1] and text2[0..j-1].', 'If text1[i-1]==text2[j-1]: dp[i][j] = dp[i-1][j-1]+1.', 'Else: dp[i][j] = max(dp[i-1][j], dp[i][j-1]).', 'Optimise space to O(min(m,n)) using rolling array.'] },
+
+            // ── DATABASE ─────────────────────────────────────────────────
+            '175': { approach: 'LEFT JOIN', time: '—', space: '—', tips: ['Use LEFT JOIN so all persons appear even without address.', 'Select: p.firstName, p.lastName, a.city, a.state.', 'Join on PersonId key between Person and Address.', 'LEFT JOIN ensures NULLs appear for missing addresses.'] },
+            '176': { approach: 'Subquery / OFFSET', time: '—', space: '—', tips: ['Use DISTINCT to remove duplicate salaries first.', 'ORDER BY salary DESC then LIMIT 1 OFFSET 1.', 'Wrap in subquery and return NULL if result is empty.', 'Window function: DENSE_RANK() partitioned by salary.'] },
+            '177': { approach: 'Dynamic SQL / Window Function', time: '—', space: '—', tips: ['Create a function getNthHighestSalary(N INT).', 'Use DISTINCT salaries ordered DESC, then OFFSET N-1 LIMIT 1.', 'Handle edge: if N ≤ 0, return NULL directly.', 'In MySQL use SET N = N - 1 before LIMIT N, 1.'] },
+            '178': { approach: 'DENSE_RANK()', time: '—', space: '—', tips: ['DENSE_RANK gives consecutive ranks (no gaps on ties).', 'RANK() would leave gaps — wrong here.', 'ORDER BY score DESC in the OVER clause.', 'Alias the result as "rank" (quote it in MySQL — reserved word).'] },
+            '180': { approach: 'Self Join / LAG()', time: '—', space: '—', tips: ['Self-join the Logs table 3 times: l1.id+1=l2.id, l2.id+1=l3.id.', 'Check l1.num = l2.num = l3.num.', 'DISTINCT to avoid duplicate results.', 'Alternative: use LAG() window function over two rows.'] },
+            '181': { approach: 'Self Join', time: '—', space: '—', tips: ['Join Employee e1 with Employee e2 on e1.managerId = e2.id.', 'Filter WHERE e1.salary > e2.salary.', 'Select e1.name as Employee.', 'Simple two-table join — great intro to self-joins.'] },
+            '182': { approach: 'GROUP BY + HAVING', time: '—', space: '—', tips: ['GROUP BY email, then HAVING COUNT(*) > 1.', 'SELECT only email (not id — not needed).', 'Use DISTINCT in outer if needed, but GROUP BY handles it.', 'Do not use DELETE here — just SELECT.'] },
+            '183': { approach: 'LEFT JOIN / NOT IN', time: '—', space: '—', tips: ['LEFT JOIN Orders on customerId; filter WHERE Orders.id IS NULL.', 'Or use NOT IN (SELECT customerId FROM Orders).', 'NOT EXISTS subquery is often most performant.', 'Watch for NULLs if using NOT IN.'] },
+            '184': { approach: 'GROUP BY + JOIN', time: '—', space: '—', tips: ['First find MAX(salary) per department with GROUP BY.', 'Then JOIN Employee with that result to find names.', 'Or use DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC).', 'Filter rank = 1 from window function approach.'] },
+            '185': { approach: 'DENSE_RANK() + Window Function', time: '—', space: '—', tips: ['DENSE_RANK() OVER (PARTITION BY departmentId ORDER BY salary DESC) AS rank.', 'Wrap in CTE or subquery, then filter WHERE rank <= 3.', 'Join with Department table to get department name.', 'DENSE_RANK handles ties correctly (both get rank 1 if equal).'] },
+            '196': { approach: 'DELETE with Self-Join', time: '—', space: '—', tips: ['DELETE p1 FROM Person p1 JOIN Person p2 ON p1.email=p2.email WHERE p1.id > p2.id.', 'This keeps the row with the smaller id.', 'Do NOT use DELETE ... WHERE id NOT IN (SELECT MIN...) — MySQL limitation.', 'The self-join DELETE syntax is the standard approach here.'] },
+            '197': { approach: 'Self Join / LAG()', time: '—', space: '—', tips: ['Self-join: w1.recordDate = w1.recordDate - INTERVAL 1 DAY.', 'Or use LAG(temperature,1) OVER (ORDER BY recordDate).', 'Compare w1.temperature > w2.temperature.', 'Use DATEDIFF(w1.recordDate, w2.recordDate) = 1 for safety.'] },
+            '262': { approach: 'Complex JOIN + GROUP BY', time: '—', space: '—', tips: ['Filter banned users in both client and driver at the start using CTEs.', 'Calculate cancellation rate = COUNT(cancelled) / COUNT(*).', 'ROUND to 2 decimal places.', 'Filter dates within the given range in WHERE clause.'] },
+            '511': { approach: 'GROUP BY + MIN()', time: '—', space: '—', tips: ['SELECT player_id, MIN(event_date) AS first_login.', 'GROUP BY player_id.', 'MIN() gives the earliest date per player.', 'Simple aggregate — great warm-up for the Game Play series.'] },
+            '512': { approach: 'Subquery + JOIN', time: '—', space: '—', tips: ['First find first login date per player with MIN(event_date).', 'Then join back to Activity to get device_name for that date.', 'Alternatively use a window function: ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY event_date).', 'Filter rn = 1 for first login device.'] },
+            '534': { approach: 'Self-Join / SUM() Window', time: '—', space: '—', tips: ['SUM(games_played) OVER (PARTITION BY player_id ORDER BY event_date) AS games_played_so_far.', 'This gives running total per player ordered by date.', 'JOIN back to get player_id and event_date in result.', 'Window functions make this elegant in a single SELECT.'] },
+            '550': { approach: 'JOIN + DATE arithmetic', time: '—', space: '—', tips: ['Find first login date per player.', 'Check if they also have a login on firstDate + 1 day.', 'Fraction = COUNT(returned players) / COUNT(total players).', 'Use DATEDIFF or DATE_ADD for date comparison.'] },
+            '577': { approach: 'LEFT JOIN', time: '—', space: '—', tips: ['LEFT JOIN Bonus on empId.', 'Filter WHERE bonus < 1000 OR bonus IS NULL.', 'NULL bonus (no bonus row) should still be included.', 'Use IFNULL or COALESCE if needed for display.'] },
+            '584': { approach: 'WHERE with NULL check', time: '—', space: '—', tips: ['WHERE referee_id != 2 alone misses NULL referee_id rows.', 'Add: OR referee_id IS NULL.', 'This is a classic NULL trap — always check IS NULL separately.', 'In some DBs: WHERE IFNULL(referee_id, 0) != 2.'] },
+            '586': { approach: 'GROUP BY + ORDER BY + LIMIT', time: '—', space: '—', tips: ['GROUP BY customer_number, then ORDER BY COUNT(*) DESC.', 'LIMIT 1 to get the top customer.', 'If multiple tied — problem guarantees only one max, so LIMIT 1 is safe.', 'COUNT(*) counts all orders per customer.'] },
+            '595': { approach: 'Simple WHERE filter', time: '—', space: '—', tips: ['WHERE area >= 3000000 OR population >= 25000000.', 'SELECT name, population, area.', 'No joins needed — single table filter.', 'Great first SQL problem — good for beginners.'] },
+            '596': { approach: 'GROUP BY + HAVING', time: '—', space: '—', tips: ['GROUP BY class, HAVING COUNT(student) >= 5.', 'Make sure to count distinct students if duplicates possible.', 'SELECT class only — no other columns needed.', 'HAVING filters after grouping, unlike WHERE.'] },
+            '601': { approach: 'Window Function', time: '—', space: '—', tips: ['Use ROW_NUMBER() - ROW_NUMBER() OVER (ORDER BY id) trick for consecutive grouping.', 'Or use LAG/LEAD to find runs of consecutive IDs.', 'Filter groups with COUNT(*) >= 3.', 'Only include rows where people >= 100.'] },
+            '607': { approach: 'NOT IN / NOT EXISTS', time: '—', space: '—', tips: ['Find order ids related to company "RED".', 'Find salesperson ids who had those orders.', 'Return salespersons NOT in that list.', 'Three-table join: SalesPerson → Orders → Company.'] },
+            '626': { approach: 'CASE statement', time: '—', space: '—', tips: ['CASE WHEN id%2=1 AND id+1 IN ids THEN id+1 ELSE ... END.', 'For even id: return id-1.', 'For odd id at max: return same id.', 'ORDER BY id in output.'] },
+            '1050': { approach: 'GROUP BY + HAVING', time: '—', space: '—', tips: ['GROUP BY actor_id, director_id.', 'HAVING COUNT(*) >= 3.', 'SELECT actor_id, director_id only.', 'Classic aggregation problem.'] },
+            '1148': { approach: 'WHERE self-compare', time: '—', space: '—', tips: ['WHERE author_id = viewer_id.', 'SELECT DISTINCT author_id, ORDER BY author_id.', 'No join needed — single table comparison.', 'DISTINCT prevents duplicates if an author viewed multiple own articles.'] },
+            '1527': { approach: 'LIKE with prefix', time: '—', space: '—', tips: ['WHERE conditions LIKE \'DIAB1%\' OR conditions LIKE \'% DIAB1%\'.', 'The space prefix handles conditions not at start.', 'Regex: REGEXP \'(^| )DIAB1\'.', 'Be careful: must match "DIAB1" as a word, not "XDIAB1".'] },
+            '1667': { approach: 'CONCAT + UPPER + LOWER', time: '—', space: '—', tips: ['CONCAT(UPPER(SUBSTRING(name,1,1)), LOWER(SUBSTRING(name,2))).', 'In PostgreSQL: INITCAP(name) does this automatically.', 'SUBSTRING(name,1,1) gets the first character.', 'SUBSTRING(name,2) gets everything from the second character.'] },
+            '1757': { approach: 'Simple WHERE', time: '—', space: '—', tips: ['WHERE low_fats = \'Y\' AND recyclable = \'Y\'.', 'SELECT product_id only.', 'No joins, no aggregation — very beginner friendly.', 'Great first problem for students new to SQL.'] },
+
+            // ── JAVASCRIPT ────────────────────────────────────────────────
+            '2667': { approach: 'Closure', time: 'O(1)', space: 'O(1)', tips: ['The inner function captures nothing — just returns "Hello World".', 'Return a function (not a value) from createHelloWorld.', 'Test: const f = createHelloWorld(); f() === "Hello World".', 'Classic intro to higher-order functions and closures.'] },
+            '2620': { approach: 'Closure with state', time: 'O(1)', space: 'O(1)', tips: ['Use a variable in outer scope to hold current count.', 'Inner function increments and returns on each call.', 'Init with n: let count = n; return () => count++.', 'The closure "remembers" count between calls.'] },
+            '2704': { approach: 'Closure + Object', time: 'O(1)', space: 'O(1)', tips: ['Return an object with toBe and notToBe methods.', 'toBe(expected): if val !== expected throw Error("Not Equal").', 'notToBe(expected): if val === expected throw Error("Equal").', 'Both methods close over val from the outer function.'] },
+            '2665': { approach: 'Closure + Object methods', time: 'O(1)', space: 'O(1)', tips: ['Keep a count variable in outer scope.', 'increment: ++count; decrement: --count; reset: count = init.', 'Return all three as an object.', 'init parameter is captured by reset closure.'] },
+            '2635': { approach: 'Array iteration', time: 'O(n)', space: 'O(n)', tips: ['Implement Array.map without using built-in .map().', 'Iterate with a for loop, apply fn to each element with its index.', 'fn(arr[i], i) — index is the second argument.', 'Push results to new array and return it.'] },
+            '2634': { approach: 'Array filter', time: 'O(n)', space: 'O(n)', tips: ['Implement Array.filter without built-in .filter().', 'Include element if fn(arr[i], i) returns truthy.', 'Collect passing elements in result array.', 'fn receives (value, index) as arguments.'] },
+            '2626': { approach: 'Array reduce', time: 'O(n)', space: 'O(1)', tips: ['If array is empty, return init directly.', 'Start accumulator at init, iterate through nums.', 'acc = fn(acc, nums[i]) at each step.', 'Implement without using built-in .reduce().'] },
+            '2629': { approach: 'Function composition', time: 'O(n)', space: 'O(1)', tips: ['Return a function that applies fns right-to-left.', 'Use reduceRight: fns.reduceRight((acc, fn) => fn(acc), x).', 'If fns is empty, return the identity function (x => x).', 'Composition: fn3(fn2(fn1(x))).'] },
+            '2703': { approach: 'arguments / rest params', time: 'O(1)', space: 'O(1)', tips: ['Use rest parameter: function argumentsLength(...args).', 'Return args.length.', 'arguments object also works but not in arrow functions.', 'One-liner: const argumentsLength = (...args) => args.length.'] },
+            '2666': { approach: 'Closure flag', time: 'O(1)', space: 'O(1)', tips: ['Track a boolean called flag in outer scope.', 'First call: if not called yet, set flag and call fn.', 'Subsequent calls: return undefined.', 'Use let called = false as the closure variable.'] },
+            '2623': { approach: 'Memoization / Cache', time: 'O(1) per cached call', space: 'O(n)', tips: ['Create a Map (or object) as cache in outer scope.', 'Build a cache key from the arguments (JSON.stringify or arg concatenation).', 'On each call, check cache first; if hit return cached, else compute and store.', 'Problem guarantees only sum, fib, factorial — so simple key strategies work.'] },
+            '2723': { approach: 'Promise.all', time: 'O(1)', space: 'O(1)', tips: ['Use Promise.all([promise1, promise2]).', 'Destructure results: const [v1, v2] = await Promise.all([...]).', 'Return v1 + v2 wrapped in a new Promise.', 'One-liner with async/await or .then() chaining.'] },
+            '2621': { approach: 'setTimeout + Promise', time: 'O(1)', space: 'O(1)', tips: ['Return a new Promise that resolves after millis ms.', 'Inside: setTimeout(resolve, millis).', 'Use async/await at call site: await sleep(1000).', 'No value needed in resolve() — just timing.'] },
+            '2715': { approach: 'setTimeout + cancel flag', time: 'O(1)', space: 'O(1)', tips: ['Call setTimeout(() => fn(...args), t) and store the timer ID.', 'cancelFn clears the timeout using clearTimeout(timerId).', 'If cancelled before t ms, fn never executes.', 'Return the cancelFn from the outer function.'] },
+            '2725': { approach: 'setInterval + cancel', time: 'O(1)', space: 'O(1)', tips: ['Call fn(...args) immediately on first call.', 'Then setInterval(() => fn(...args), t) for repeating calls.', 'cancelFn calls clearInterval(intervalId).', 'Return cancelFn. Note: first call is immediate (t=0 behavior).'] },
+            '2637': { approach: 'Promise.race', time: 'O(1)', space: 'O(1)', tips: ['Create a timeout promise that rejects after t ms.', 'Use Promise.race([fn(...args), timeoutPromise]).', 'If fn resolves first → return its value.', 'If timeout hits first → reject with "Time Limit Exceeded".'] },
+            '2622': { approach: 'Map + expiry timestamps', time: 'O(1)', space: 'O(n)', tips: ['Store {value, expireAt: Date.now() + duration} in a Map.', 'get(key): return -1 if key not found or Date.now() > expireAt.', 'set(key): overwrite existing or create new entry.', 'count(): filter entries where Date.now() < expireAt.'] },
+            '2627': { approach: 'setTimeout + clear on each call', time: 'O(1)', space: 'O(1)', tips: ['Store timerId in outer scope.', 'Each call to debounced: clearTimeout(timerId).', 'Set new timerId = setTimeout(() => fn(...args), t).', 'Only the last call within the window actually fires fn.'] },
+            '2721': { approach: 'Promise.all', time: 'O(1)', space: 'O(n)', tips: ['Map functions to their invocations: functions.map(fn => fn()).', 'Pass the resulting array to Promise.all([...]).', 'If any function rejects → the whole promise rejects.', 'Return the promise from Promise.all.'] },
+            '2727': { approach: 'Type check + key count', time: 'O(1)', space: 'O(1)', tips: ['Check if Array: return arr.length === 0.', 'Check if Object: return Object.keys(obj).length === 0.', 'Both arrays and plain objects should be handled.', 'typeof [] === "object" — check Array.isArray first.'] },
+        };
+
+        let PROBLEMS = [];
+        let curCat = 'All', curDiff = 'All', curTag = '', curSearch = '';
+
+        async function loadProblems() {
+            try {
+                const res = await fetch('/api/problems');
+                const result = await res.json();
+                if (result.message === 'success') {
+                    PROBLEMS = result.data.map(p => ({
+                        num: p.problem_number,
+                        title: p.title,
+                        diff: p.difficulty,
+                        acc: p.acceptance_rate + '%',
+                        cat: p.category,
+                        desc: p.description,
+                        tags: p.tags || [],
+                        done: false
+                    }));
+                    updateCounts();
+                    applyFilters();
+                }
+            } catch (err) { console.error('Failed to load:', err); }
+        }
+
+        function catBadgeClass(cat) { return cat === 'Database' ? 'db' : cat === 'JavaScript' ? 'js' : ''; }
+        function diffClass(d) { return d === 'Easy' ? 'easy' : d === 'Medium' ? 'med' : 'hard'; }
+        function diffLabel(d) { return d; }
+
+        function buildTips(tip) {
+            if (!tip) return '<div class="desc-text" style="color:#484f58">Tips coming soon.</div>';
+            return `
+    <div class="approach">
+      <div class="approach-label">// BEST APPROACH</div>
+      <div class="approach-val">${tip.approach}</div>
+    </div>
+    <div class="stat-pill-row">
+      <div class="stat-pill">TIME: ${tip.time}</div>
+      <div class="stat-pill">SPACE: ${tip.space}</div>
+    </div>
+    <ul class="tip-list">${tip.tips.map(t => `<li>${t}</li>`).join('')}</ul>`;
+        }
+
+        function renderRow(p) {
+            const tip = TIPS[p.num];
+            const catCls = catBadgeClass(p.cat);
+            return `<div class="prow" id="prow-${p.num}" onclick="toggleRow('${p.num}')">
+    <div class="prow-main">
+      <span class="pnum">${p.num}</span>
+      <span class="ptitle">${p.title} <span class="chevron">▶</span></span>
+      <span><span class="tag ${diffClass(p.diff)}">${diffLabel(p.diff)}</span></span>
+      <span class="acc">${p.acc}</span>
+      <span><span class="cat-badge ${catCls}">${p.cat}</span></span>
+      <span class="done-icon ${p.done ? 'yes' : 'no'}">${p.done ? '✓' : '○'}</span>
+    </div>
+    <div class="prow-detail">
+      <div class="detail-section">
+        <h4><span class="ico">📄</span>DESCRIPTION</h4>
+        <div class="desc-text">${p.desc}</div>
+        <div style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px;">
+          ${p.tags.map(t => `<span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(88,166,255,.1);color:#58a6ff;font-family:'JetBrains Mono',monospace;">${t}</span>`).join('')}
+        </div>
+        <button class="solve-btn" onclick="event.stopPropagation(); window.location.href = 'editor.html?num=${p.num}'">▶ Solve Problem</button>
+      </div>
+      <div class="detail-section">
+        <h4><span class="ico">💡</span>DISCUSSION TIPS</h4>
+        ${buildTips(tip)}
+      </div>
+    </div>
+  </div>`;
+        }
+
+        function applyFilters() {
+            curSearch = document.getElementById('searchInput').value.toLowerCase();
+            const list = PROBLEMS.filter(p => {
+                if (curCat !== 'All' && p.cat !== curCat) return false;
+                if (curDiff !== 'All' && p.diff !== curDiff) return false;
+                if (curTag && !p.tags.some(t => t.toLowerCase().includes(curTag.toLowerCase()))) return false;
+                if (curSearch && !p.title.toLowerCase().includes(curSearch) && !p.num.includes(curSearch)) return false;
+                return true;
+            });
+            const el = document.getElementById('problemList');
+            const empty = document.getElementById('emptyMsg');
+            document.getElementById('totalCount').textContent = `${list.length} problems`;
+            if (!list.length) { el.innerHTML = ''; empty.style.display = 'block'; }
+            else { empty.style.display = 'none'; el.innerHTML = list.map(renderRow).join(''); }
+        }
+
+        function toggleRow(num) {
+            const row = document.getElementById('prow-' + num);
+            const wasOpen = row.classList.contains('open');
+            document.querySelectorAll('.prow.open').forEach(r => r.classList.remove('open'));
+            if (!wasOpen) row.classList.add('open');
+        }
+
+        function setCat(el) {
+            curCat = el.dataset.cat; curTag = '';
+            document.querySelectorAll('.sidebar-item[data-cat]').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.sidebar-item[data-diff]').forEach(i => i.classList.remove('active'));
+            applyFilters();
+        }
+        function setDiff(el) {
+            curDiff = el.dataset.diff;
+            document.querySelectorAll('.sidebar-item[data-diff]').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.filt').forEach(b => { b.classList.remove('on'); if (b.dataset.d === curDiff) b.classList.add('on'); });
+            applyFilters();
+        }
+        function setTag(el) {
+            curTag = el.dataset.tag; curCat = 'All'; curDiff = 'All';
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.filt').forEach(b => { b.classList.remove('on'); if (b.dataset.d === 'All') b.classList.add('on'); });
+            applyFilters();
+        }
+        function setDiffBtn(el) {
+            curDiff = el.dataset.d;
+            document.querySelectorAll('.filt').forEach(b => b.classList.remove('on'));
+            el.classList.add('on');
+            document.querySelectorAll('.sidebar-item[data-diff]').forEach(i => i.classList.remove('active'));
+            applyFilters();
+        }
+
+        function updateCounts() {
+            document.getElementById('cnt-all').textContent = PROBLEMS.length;
+            document.getElementById('cnt-algo').textContent = PROBLEMS.filter(p => p.cat === 'Algorithms').length;
+            document.getElementById('cnt-db').textContent = PROBLEMS.filter(p => p.cat === 'Database').length;
+            document.getElementById('cnt-js').textContent = PROBLEMS.filter(p => p.cat === 'JavaScript').length;
+            document.getElementById('cnt-easy').textContent = PROBLEMS.filter(p => p.diff === 'Easy').length;
+            document.getElementById('cnt-med').textContent = PROBLEMS.filter(p => p.diff === 'Medium').length;
+            document.getElementById('cnt-hard').textContent = PROBLEMS.filter(p => p.diff === 'Hard').length;
+            
+            // Add counts for new languages
+            if(document.getElementById('cnt-p')) document.getElementById('cnt-p').textContent = PROBLEMS.filter(p => p.cat === 'Python').length;
+            if(document.getElementById('cnt-j')) document.getElementById('cnt-j').textContent = PROBLEMS.filter(p => p.cat === 'Java').length;
+            if(document.getElementById('cnt-c')) document.getElementById('cnt-c').textContent = PROBLEMS.filter(p => p.cat === 'C++').length;
+        }
+
+        loadProblems();
+    </script>
+</body>
+
+</html>

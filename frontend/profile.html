@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TerminalSolve | Developer Profile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #0a0d12;
+            --bg-surface: #0f1419;
+            --bg-card: #161b22;
+            --border: #30363d;
+            --green: #00e676;
+            --text-main: #e6edf3;
+            --text-muted: #8b949e;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-deep); 
+            color: var(--text-main); 
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar-item {
+            @apply flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold uppercase tracking-widest text-[#8b949e] transition-all cursor-pointer hover:bg-white/5;
+        }
+        .sidebar-item.active {
+            @apply text-[#00e676] bg-[#00e676]/10 border-r-4 border-[#00e676] rounded-none;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 24px;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: transform 0.2s ease;
+        }
+        .stat-card:hover { border-color: var(--green); transform: translateY(-2px); }
+
+        .activity-square { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+        .lvl-0 { background: #161b22; }
+        .lvl-1 { background: #0e4429; }
+        .lvl-2 { background: #006d32; }
+        .lvl-3 { background: #26a641; }
+        .lvl-4 { background: #39d353; }
+
+        /* TIER COLORS */
+        .tier-syntax { color: #8b949e; background: rgba(139,148,158,0.1) !important; box-shadow: 0 0 15px rgba(139,148,158,0.2); }
+        .tier-compiler { color: #ffa040; background: rgba(255,160,64,0.1) !important; box-shadow: 0 0 15px rgba(255,160,64,0.2); }
+        .tier-kernel { color: #00e676; background: rgba(0,230,118,0.1) !important; box-shadow: 0 0 15px rgba(0,230,118,0.2); }
+        .tier-architect { color: #58a6ff; background: rgba(88,166,255,0.1) !important; box-shadow: 0 0 15px rgba(88,166,255,0.2); }
+        .tier-singularity { color: #c084fc; background: rgba(192,132,252,0.1) !important; box-shadow: 0 0 20px rgba(192,132,252,0.4); border: 1px solid #c084fc !important; }
+
+        .star-on { color: gold; font-size: 14px; text-shadow: 0 0 5px orange; }
+        .star-off { color: #30363d; font-size: 14px; }
+        
+        .heatmap-container {
+            display: grid;
+            grid-template-rows: repeat(7, 1fr);
+            grid-auto-flow: column;
+            gap: 3px;
+            padding-bottom: 8px;
+        }
+
+        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    </style>
+</head>
+<body class="flex">
+    
+    <!-- Sidebar -->
+    <aside class="w-64 border-r border-border flex flex-col pt-10 bg-[#0a0d12]">
+        <div class="px-8 mb-12 flex flex-col items-center">
+            <div class="w-20 h-20 rounded-2xl overflow-hidden border-2 border-green/30 mb-4 p-1">
+                <img id="side-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Terminal" alt="Avatar" class="w-full h-full object-cover">
+            </div>
+            <h3 id="side-username" class="text-sm font-bold text-white mb-1">...</h3>
+            <p id="side-rank" class="text-[10px] font-black text-green uppercase tracking-widest bg-green/10 px-2 py-0.5 rounded">Rank: ...</p>
+        </div>
+
+        <nav class="flex-1 space-y-1">
+            <div class="sidebar-item" onclick="window.location.href='dashboard.html'"><span class="material-symbols-outlined text-sm">dashboard</span> Dashboard</div>
+            <div class="sidebar-item" onclick="window.location.href='problem.html'"><span class="material-symbols-outlined text-sm">menu_book</span> Library</div>
+            <div class="sidebar-item" onclick="window.location.href='leaderboard.html'"><span class="material-symbols-outlined text-sm">emoji_events</span> Leaderboard</div>
+            <div class="sidebar-item active"><span class="material-symbols-outlined text-sm">settings</span> Settings</div>
+        </nav>
+
+        <div class="p-6">
+            <button onclick="window.location.href='problem.html'" class="w-full py-4 bg-green text-deep font-black rounded-lg text-[10px] uppercase tracking-widest hover:brightness-110 shadow-lg shadow-green/10 transition-all">Start Practice</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col overflow-hidden">
+        <!-- Header Nav -->
+        <header class="h-16 border-b border-border flex items-center justify-between px-10 bg-deep/50 backdrop-blur-md shrink-0">
+             <span class="text-lg font-bold font-headline text-green tracking-tighter">TerminalSolve</span>
+             <div class="flex items-center gap-6">
+                 <span class="material-symbols-outlined text-text-muted hover:text-white cursor-pointer">cast</span>
+                 <span class="material-symbols-outlined text-text-muted hover:text-white cursor-pointer">notifications</span>
+                 <div class="w-8 h-8 rounded-full bg-green text-deep flex items-center justify-center font-bold text-xs cursor-pointer">S</div>
+             </div>
+        </header>
+
+        <!-- Scrollable Profile Body -->
+        <div class="flex-1 overflow-y-auto custom-scroll p-10 bg-[#0d1017]">
+            <div class="max-w-6xl mx-auto space-y-8">
+                
+                <!-- Profile Identity Card -->
+                <div class="bg-bg-card border border-border p-8 rounded-[32px] flex items-center gap-10 relative overflow-hidden group">
+                    <div class="absolute -top-20 -right-20 w-80 h-80 bg-green/5 rounded-full blur-3xl group-hover:bg-green/10 transition-all duration-500"></div>
+                    
+                    <div class="relative group/avatar cursor-pointer">
+                        <div class="w-32 h-32 rounded-3xl overflow-hidden border-2 border-green shrink-0 shadow-2xl relative transition-all duration-300 group-hover/avatar:border-white">
+                            <img id="main-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Terminal" alt="Avatar" class="w-full h-full object-cover">
+                            <!-- Overlay -->
+                            <div id="avatar-overlay" class="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-green text-3xl">add_a_photo</span>
+                            </div>
+                        </div>
+                        <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                    </div>
+
+                    <div class="flex-1 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <h1 id="main-username" class="text-3xl font-bold font-headline text-white mb-2">...</h1>
+                                <div id="tier-master-container" class="flex items-center gap-6">
+                                    <!-- Dynamic Badge -->
+                                    <div id="tier-badge" class="flex items-center gap-3 px-4 py-2 rounded-2xl border transition-all duration-500">
+                                        <div id="tier-icon-box" class="w-10 h-10 flex items-center justify-center rounded-xl text-2xl">
+                                            <span id="tier-icon" class="material-symbols-outlined">terminal</span>
+                                        </div>
+                                        <div>
+                                            <p id="tier-name" class="text-[10px] font-black uppercase tracking-[0.2em] mb-1">... Tier</p>
+                                            <div id="tier-stars" class="flex gap-1">
+                                                <!-- Stars -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Points & Location -->
+                                    <div class="flex flex-col gap-1">
+                                        <span class="text-[10px] text-text-muted font-bold uppercase tracking-widest flex items-center gap-2">
+                                            <span class="material-symbols-outlined text-xs text-green">electric_bolt</span>
+                                            <span id="stat-points">0</span> XP
+                                        </span>
+                                        <span class="text-[10px] text-text-muted font-medium flex items-center gap-1.5 uppercase tracking-widest"><span class="material-symbols-outlined text-sm">location_on</span> <span id="location-text">System.IO</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="px-6 py-2 bg-[#1c2026] text-white border border-border rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-[#30363d] transition-all">Follow</button>
+                                <button class="px-6 py-2 bg-green/10 text-green border border-green/30 rounded-xl text-[10px] font-bold uppercase tracking-widest hover:bg-green/20 transition-all">Challenge</button>
+                            </div>
+                        </div>
+                        <p id="bio-text" class="text-xs text-text-muted leading-relaxed max-w-2xl font-medium">
+                            TerminalSolve Developer | Competitive Coder.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-4 gap-6">
+                    <div class="stat-card">
+                        <p class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">Total Solved</p>
+                        <p id="stat-solved" class="text-3xl font-bold font-headline text-white">0</p>
+                    </div>
+                    <div class="stat-card border-green/30 bg-green/5">
+                        <p class="text-[10px] font-bold text-green uppercase tracking-[0.2em]">Current Streak</p>
+                        <p id="stat-streak" class="text-3xl font-bold font-headline text-green">0 Days</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">Global Rank</p>
+                        <p id="stat-rank" class="text-3xl font-bold font-headline text-white">#0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[10px] font-bold text-text-muted uppercase tracking-[0.2em]">Accuracy</p>
+                        <p id="stat-accuracy" class="text-3xl font-bold font-headline text-white">0%</p>
+                    </div>
+                </div>
+
+                <!-- Lower Content Grid -->
+                <div class="grid grid-cols-3 gap-8">
+                    <!-- Left: Activity & Achievements -->
+                    <div class="col-span-2 space-y-8">
+                        <div class="bg-bg-card border border-border p-8 rounded-3xl space-y-6 overflow-hidden">
+                            <h3 class="text-[11px] font-bold text-white uppercase tracking-widest">Activity Stream</h3>
+                            <div class="overflow-x-auto custom-scroll">
+                                <div class="heatmap-container w-max">
+                                    <!-- Simulated Heatmap -->
+                                    <script>
+                                        for(let i=0; i<364; i++) {
+                                            const lvl = Math.floor(Math.random() * 5);
+                                            document.write(`<div class="activity-square lvl-${lvl}"></div>`);
+                                        }
+                                    </script>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center text-[10px] text-text-muted pt-2">
+                                <span>Last 12 Months</span>
+                                <div class="flex items-center gap-1.5 ">
+                                    Less <div class="activity-square lvl-0"></div><div class="activity-square lvl-1"></div><div class="activity-square lvl-2"></div><div class="activity-square lvl-3"></div><div class="activity-square lvl-4"></div> More
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="bg-bg-card border border-border p-6 rounded-3xl flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-full bg-green/10 flex items-center justify-center text-green"><span class="material-symbols-outlined">bolt</span></div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-white mb-1">Fast Solver</h4>
+                                    <p class="text-[10px] text-text-muted tracking-widest uppercase">Top 5% Speed</p>
+                                </div>
+                            </div>
+                            <div class="bg-bg-card border border-border p-6 rounded-3xl flex items-center gap-5">
+                                <div class="w-12 h-12 rounded-full bg-orange-400/10 flex items-center justify-center text-orange-400"><span class="material-symbols-outlined">local_fire_department</span></div>
+                                <div>
+                                    <h4 class="text-xs font-bold text-white mb-1">7-Day Streak</h4>
+                                    <p class="text-[10px] text-text-muted tracking-widest uppercase">Consistent</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Skill Matrix & Recent Activity -->
+                    <div class="space-y-8">
+                        <div class="bg-bg-card border border-border p-8 rounded-3xl aspect-square flex flex-col items-center justify-center text-center">
+                            <h3 class="text-[11px] font-bold text-white uppercase tracking-widest mb-10">Skill Matrix</h3>
+                            <!-- Radar Placeholder using SVG -->
+                            <svg class="w-40 h-40 transform group-hover:rotate-12 transition-all duration-700" viewBox="0 0 100 100">
+                                <!-- Background Pentagon -->
+                                <polygon points="50,10 88,38 74,82 26,82 12,38" fill="rgba(255, 255, 255, 0.03)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                                <!-- Active Skill Polygon -->
+                                <polygon id="skill-polygon" points="50,20 80,40 70,75 30,75 20,40" fill="rgba(0, 230, 118, 0.2)" stroke="#00e676" stroke-width="2" class="transition-all duration-1000"/>
+                            </svg>
+                            <div class="mt-8 grid grid-cols-2 gap-x-8 gap-y-2 text-[9px] font-bold uppercase tracking-widest text-[#8b949e]">
+                                <span>Algorithms</span>
+                                <span>Database</span>
+                                <span>Logic</span>
+                                <span>Math</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-bg-card border border-border rounded-3xl overflow-hidden">
+                             <div class="p-4 border-b border-border bg-deep/30">
+                                 <h3 class="text-[11px] font-bold text-white uppercase tracking-widest">Recent Activity</h3>
+                             </div>
+                             <div id="recent-activity-list" class="divide-y divide-border/50">
+                                 <!-- Dynamic Activity Here -->
+                                 <div class="p-8 text-center text-[10px] uppercase font-bold text-text-muted tracking-widest">
+                                     No recent activity recorded
+                                 </div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <script src="profile.js"></script>
+</body>
+</html>
