@@ -4,7 +4,7 @@
   "description": "TerminalSolve: High-Performance Technical Education Platform",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node init_db.js && node server.js",
     "seed": "node init_db.js",
     "dev": "node server.js",
     "postinstall": "npm rebuild sqlite3 --build-from-source",
