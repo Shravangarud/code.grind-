@@ -51,23 +51,37 @@ function autoSeed() {
         path.join(__dirname, 'database', 'language_questions.sql')
     ];
 
-    db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='problems'", (err, row) => {
-        if (!row) {
-            console.log('[AutoSeed] Database is fresh. Initializing schema and data...');
+    db.get("SELECT COUNT(*) as count FROM problems", (err, row) => {
+        if (err || !row || row.count === 0) {
+            console.log('[AutoSeed] Library is empty or missing. Initializing schema and 105+ problems...');
             sqlFiles.forEach(file => {
                 if (fs.existsSync(file)) {
-                    console.log(`  > Importing: ${path.basename(file)}`);
+                    console.log(`  > Batch Syncing: ${path.basename(file)}`);
                     let content = fs.readFileSync(file, 'utf8')
                         .replace(/SERIAL PRIMARY KEY/g, 'INTEGER PRIMARY KEY AUTOINCREMENT')
                         .replace(/INSERT INTO/g, 'INSERT OR IGNORE INTO');
                     
                     db.exec(content, (err) => {
-                        if (err) console.error(`  [!] Error In ${path.basename(file)}:`, err.message);
+                        if (err) console.error(`  [!] Sync Error in ${path.basename(file)}:`, err.message);
                     });
                 }
             });
+        } else {
+            console.log(`[AutoSeed] System ready. Found ${row.count} active problems.`);
         }
     });
+
+    // Ensure 'users' table exists for social login
+    db.exec(`CREATE TABLE IF NOT EXISTS users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        xp INTEGER DEFAULT 0,
+        solved_count INTEGER DEFAULT 0,
+        rank_num INTEGER DEFAULT 15000,
+        avatar_seed VARCHAR(255),
+        last_active TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );`);
 }
 
 // API Routes
