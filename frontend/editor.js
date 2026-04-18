@@ -152,20 +152,22 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // --- PERFORMANCE TELEMETRY ---
         const startTime = performance.now();
-        const code = codeEditor.value;
+        const code = editor.value;
         
         setTimeout(() => {
             const endTime = performance.now();
             const actualRuntime = Math.max(1, Math.floor((endTime - startTime) / 10) + (code.length % 5));
             const simulatedMemory = (4.1 + (code.length % 100) / 100).toFixed(1);
             
-            document.getElementById('stat-runtime').textContent = `${actualRuntime}ms`;
-            document.getElementById('stat-memory').textContent = `${simulatedMemory}MB`;
+            const rtEl = document.getElementById('stat-runtime');
+            const memEl = document.getElementById('stat-memory');
+            if(rtEl) rtEl.textContent = `${actualRuntime}ms`;
+            if(memEl) memEl.textContent = `${simulatedMemory}MB`;
 
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalContent;
             updateUserProgress();
-            successModal.classList.remove('hidden');
+            if(successModal) successModal.classList.remove('hidden');
         }, 1200);
     });
 
