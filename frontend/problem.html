@@ -650,13 +650,13 @@
             <div class="sidebar-section">
                 <div class="sidebar-label">STATUS</div>
                 <div class="sidebar-item active" data-status="all" onclick="setStatus(this)">
-                    <span>All</span><span class="cnt" id="cnt-all-status">0</span>
+                    <span>All</span><span class="cnt" id="cnt-status-all">0</span>
                 </div>
                 <div class="sidebar-item" data-status="solved" onclick="setStatus(this)">
-                    <span>Solved</span><span class="cnt" id="cnt-solved">0</span>
+                    <span>Solved</span><span class="cnt" id="cnt-status-solved">0</span>
                 </div>
                 <div class="sidebar-item" data-status="unsolved" onclick="setStatus(this)">
-                    <span>Unsolved</span><span class="cnt" id="cnt-unsolved">0</span>
+                    <span>Unsolved</span><span class="cnt" id="cnt-status-unsolved">0</span>
                 </div>
             </div>
             <div class="sidebar-section">
@@ -909,7 +909,8 @@
 
         function setStatus(el) {
             curStatus = el.dataset.status;
-            document.querySelectorAll('.sidebar-item[data-status]').forEach(i => i.classList.remove('active'));
+            // Clear other active filters
+            document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
             applyFilters();
         }
@@ -954,9 +955,9 @@
             const cCnt = document.getElementById('cnt-c'); if(cCnt) cCnt.textContent = PROBLEMS.filter(p => p.cat === 'C++').length;
 
             // Status Counts
-            const asCnt = document.getElementById('cnt-all-status'); if(asCnt) asCnt.textContent = PROBLEMS.length;
-            const sCnt = document.getElementById('cnt-solved'); if(sCnt) sCnt.textContent = PROBLEMS.filter(p => p.done).length;
-            const uCnt = document.getElementById('cnt-unsolved'); if(uCnt) uCnt.textContent = PROBLEMS.filter(p => !p.done).length;
+            const asCnt = document.getElementById('cnt-status-all'); if(asCnt) asCnt.textContent = PROBLEMS.length;
+            const sCnt = document.getElementById('cnt-status-solved'); if(sCnt) sCnt.textContent = PROBLEMS.filter(p => p.done).length;
+            const uCnt = document.getElementById('cnt-status-unsolved'); if(uCnt) uCnt.textContent = PROBLEMS.filter(p => !p.done).length;
 
             document.getElementById('cnt-easy').textContent = PROBLEMS.filter(p => p.diff === 'Easy').length;
             document.getElementById('cnt-med').textContent = PROBLEMS.filter(p => p.diff === 'Medium').length;
