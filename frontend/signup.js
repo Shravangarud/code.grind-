@@ -373,51 +373,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // SOCIAL AUTH BUTTONS
     // ═══════════════════════════════════════════════════════
     socialBtns.forEach(btn => {
-        const provider = btn.querySelector('span:last-child')?.textContent.trim();
+        const provider = btn.querySelector('span:last-child')?.textContent.trim().toLowerCase();
         btn.addEventListener('click', () => {
-            console.log(`[code.grind] Initiating ${provider} OAuth flow…`);
-            btn.style.outline = '1px solid rgba(0, 228, 117, 0.6)';
-            const label = btn.querySelector('span:last-child');
-            const orig  = label.textContent;
-            label.textContent = 'CONNECTING…';
-            
-            setTimeout(() => {
-                label.textContent = orig;
-                btn.style.outline = '';
-                
-                // Simulate Session Creation from Social
-                const nameFromSocial = provider === 'Google' ? 'Google Developer' : 'GitHub Engineer';
-                const userData = {
-                    name: nameFromSocial,
-                    email: `${provider.toLowerCase()}@auth.io`,
-                    rank: "Cloud Dev",
-                    tier: "Silver",
-                    location: provider,
-                    bio: `Connected via ${provider}.`,
-                    solved: 5,
-                    streak: 2,
-                    rank_num: 890,
-                    accuracy: 88,
-                    avatar_seed: nameFromSocial
-                };
-                localStorage.setItem('terminal_user', JSON.stringify(userData));
-
-                // Sync to Global DB
-                fetch('/api/users/sync', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name: userData.name,
-                        email: userData.email,
-                        xp: 1500, // Social base XP
-                        solved: userData.solved,
-                        rank_num: userData.rank_num,
-                        avatar_seed: userData.avatar_seed
-                    })
-                }).catch(e => console.error('[Social Sync Error]', e));
-
-                window.location.href = 'dashboard.html';
-            }, 1500);
+            console.log(`[code.grind] Redirecting to ${provider} OAuth...`);
+            window.location.href = `/auth/${provider}`;
         });
     });
 

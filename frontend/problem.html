@@ -648,6 +648,18 @@
                 </div>
             </div>
             <div class="sidebar-section">
+                <div class="sidebar-label">STATUS</div>
+                <div class="sidebar-item active" data-status="all" onclick="setStatus(this)">
+                    <span>All</span><span class="cnt" id="cnt-all-status">0</span>
+                </div>
+                <div class="sidebar-item" data-status="solved" onclick="setStatus(this)">
+                    <span>Solved</span><span class="cnt" id="cnt-solved">0</span>
+                </div>
+                <div class="sidebar-item" data-status="unsolved" onclick="setStatus(this)">
+                    <span>Unsolved</span><span class="cnt" id="cnt-unsolved">0</span>
+                </div>
+            </div>
+            <div class="sidebar-section">
                 <div class="sidebar-label">DIFFICULTY</div>
                 <div class="sidebar-item" data-diff="Easy" onclick="setDiff(this)">
                     <span style="color:#00c853">Easy</span><span class="cnt" id="cnt-easy">0</span>
@@ -799,7 +811,8 @@
         };
 
         let PROBLEMS = [];
-        let curCat = 'All', curDiff = 'All', curTag = '', curSearch = '';
+        let curCat = 'All', curDiff = 'All', curTag = '', curSearch = '', curStatus = 'all';
+        const storedUser = JSON.parse(localStorage.getItem('terminal_user')) || { solved_ids: [] };
 
         async function loadProblems() {
             try {
@@ -814,7 +827,7 @@
                         cat: p.category,
                         desc: p.description,
                         tags: p.tags || [],
-                        done: false
+                        done: (storedUser.solved_ids || []).includes(p.problem_number)
                     }));
                     updateCounts();
                     applyFilters();
@@ -874,6 +887,8 @@
             const list = PROBLEMS.filter(p => {
                 if (curCat !== 'All' && p.cat !== curCat) return false;
                 if (curDiff !== 'All' && p.diff !== curDiff) return false;
+                if (curStatus === 'solved' && !p.done) return false;
+                if (curStatus === 'unsolved' && p.done) return false;
                 if (curTag && !p.tags.some(t => t.toLowerCase().includes(curTag.toLowerCase()))) return false;
                 if (curSearch && !p.title.toLowerCase().includes(curSearch) && !p.num.includes(curSearch)) return false;
                 return true;
@@ -892,11 +907,17 @@
             if (!wasOpen) row.classList.add('open');
         }
 
+        function setStatus(el) {
+            curStatus = el.dataset.status;
+            document.querySelectorAll('.sidebar-item[data-status]').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            applyFilters();
+        }
+
         function setCat(el) {
             curCat = el.dataset.cat; curTag = '';
             document.querySelectorAll('.sidebar-item[data-cat]').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.querySelectorAll('.sidebar-item[data-diff]').forEach(i => i.classList.remove('active'));
             applyFilters();
         }
         function setDiff(el) {
@@ -926,14 +947,20 @@
             document.getElementById('cnt-algo').textContent = PROBLEMS.filter(p => p.cat === 'Algorithms').length;
             document.getElementById('cnt-db').textContent = PROBLEMS.filter(p => p.cat === 'Database').length;
             document.getElementById('cnt-js').textContent = PROBLEMS.filter(p => p.cat === 'JavaScript').length;
+            
+            // Language Counts
+            const pCnt = document.getElementById('cnt-p'); if(pCnt) pCnt.textContent = PROBLEMS.filter(p => p.cat === 'Python').length;
+            const jCnt = document.getElementById('cnt-j'); if(jCnt) jCnt.textContent = PROBLEMS.filter(p => p.cat === 'Java').length;
+            const cCnt = document.getElementById('cnt-c'); if(cCnt) cCnt.textContent = PROBLEMS.filter(p => p.cat === 'C++').length;
+
+            // Status Counts
+            const asCnt = document.getElementById('cnt-all-status'); if(asCnt) asCnt.textContent = PROBLEMS.length;
+            const sCnt = document.getElementById('cnt-solved'); if(sCnt) sCnt.textContent = PROBLEMS.filter(p => p.done).length;
+            const uCnt = document.getElementById('cnt-unsolved'); if(uCnt) uCnt.textContent = PROBLEMS.filter(p => !p.done).length;
+
             document.getElementById('cnt-easy').textContent = PROBLEMS.filter(p => p.diff === 'Easy').length;
             document.getElementById('cnt-med').textContent = PROBLEMS.filter(p => p.diff === 'Medium').length;
             document.getElementById('cnt-hard').textContent = PROBLEMS.filter(p => p.diff === 'Hard').length;
-            
-            // Add counts for new languages
-            if(document.getElementById('cnt-p')) document.getElementById('cnt-p').textContent = PROBLEMS.filter(p => p.cat === 'Python').length;
-            if(document.getElementById('cnt-j')) document.getElementById('cnt-j').textContent = PROBLEMS.filter(p => p.cat === 'Java').length;
-            if(document.getElementById('cnt-c')) document.getElementById('cnt-c').textContent = PROBLEMS.filter(p => p.cat === 'C++').length;
         }
 
         loadProblems();

@@ -2,6 +2,10 @@ const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+const GitHubStrategy = require('passport-github2').Strategy;
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -9,6 +13,13 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(session({
+    secret: 'codegrind_secret_key_88',
+    resave: false,
+    saveUninitialized: true
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Serve frontend static files
 app.use(express.static(path.join(__dirname, 'frontend')));
@@ -165,6 +176,87 @@ app.get('/api/leaderboard', (req, res) => {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ message: "success", data: rows });
     });
+});
+
+// --- OAUTH STRATEGIES (Placeholders for Keys) ---
+// Note: In production, store these in Environment Variables
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || 'your-google-id';
+const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'your-google-secret';
+const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID || 'your-github-id';
+const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET || 'your-github-secret';
+
+passport.serializeUser((user, done) => done(null, user));
+passport.deserializeUser((obj, done) => done(null, obj));
+
+// Google Strategy
+passport.use(new GoogleStrategy({
+    clientID: GOOGLE_CLIENT_ID,
+    clientSecret: GOOGLE_CLIENT_SECRET,
+    callbackURL: "/auth/google/callback"
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
+
+// GitHub Strategy
+passport.use(new GitHubStrategy({
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: "/auth/github/callback"
+}, (accessToken, refreshToken, profile, done) => {
+    return done(null, profile);
+}));
+
+// Auth Routes
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/signup.html' }), (req, res) => {
+    res.redirect('/auth/success');
+});
+
+app.get('/auth/github', passport.authenticate('github', { scope: ['user:email'] }));
+app.get('/auth/github/callback', passport.authenticate('github', { failureRedirect: '/signup.html' }), (req, res) => {
+    res.redirect('/auth/success');
+});
+
+// Post-Login Success Route
+app.get('/auth/success', (req, res) => {
+    if (!req.user) return res.redirect('/signup.html');
+    
+    // Pass user info to a temporary page that saves to localStorage
+    const userData = {
+        name: req.user.displayName || req.user.username,
+        email: req.user.emails ? req.user.emails[0].value : 'no-email@auth.io',
+        avatar_seed: req.user.photos ? req.user.photos[0].value : (req.user.displayName || 'Dev'),
+        social_id: req.user.id
+    };
+    
+    res.send(`
+        <script>
+            const socialUser = ${JSON.stringify(userData)};
+            const localData = {
+                name: socialUser.name,
+                email: socialUser.email,
+                avatar_seed: socialUser.avatar_seed,
+                points: 0, solved: 0, solved_ids: [], rank_num: 15402, rank: "New Dev", tier: "Bronze"
+            };
+            localStorage.setItem('terminal_user', JSON.stringify(localData));
+            
+            // Pulse to global leaderboard DB
+            fetch('/api/users/sync', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: localData.name,
+                    email: localData.email,
+                    xp: 0, solved: 0, rank_num: 15402,
+                    avatar_seed: localData.avatar_seed
+                })
+            }).then(() => {
+                window.location.href = '/dashboard.html';
+            }).catch(() => {
+                window.location.href = '/dashboard.html';
+            });
+        </script>
+    `);
 });
 
 app.listen(PORT, () => {
